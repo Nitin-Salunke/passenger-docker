@@ -6,3 +6,5 @@ source /pd_build/buildconfig
 run minimal_apt_get_install build-essential
 ## Bundler has to be able to pull dependencies from git.
 run minimal_apt_get_install git
+## Curl used to download few depedent packages.
+run minimal_apt_get_install curl

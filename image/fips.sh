@@ -50,18 +50,18 @@ popd
 sudo update-alternatives --force --install /usr/bin/openssl openssl /usr/local/ssl/bin/openssl 50
 
 # Point the built OpenSSL's configuration at the system default (which is the one Node looks at)
-#sudo ln -f -s /etc/ssl/openssl.cnf /usr/local/ssl/openssl.cnf
+sudo ln -f -s /etc/ssl/openssl.cnf /usr/local/ssl/openssl.cnf
 
 # Enable global FIPS mode in that configuration. It's all FIPS, all the time!
-# sudo cat << 'EOF' > /etc/ssl/openssl.cnf
-# openssl_conf = openssl_conf_section
-#
-# [openssl_conf_section]
-# alg_section = evp_settings
-#
-# [evp_settings]
-# fips_mode = yes
-# EOF
+sudo cat << 'EOF' > /etc/ssl/openssl.cnf
+openssl_conf = openssl_conf_section
+
+[openssl_conf_section]
+alg_section = evp_settings
+
+[evp_settings]
+fips_mode = no
+EOF
 
 # Copy c_rehash back to bin as it is required by ca-certificates package
 cp c_rehash /usr/bin/c_rehash
@@ -69,6 +69,24 @@ cp c_rehash /usr/bin/c_rehash
 # Install the compatible version of ca-certificates
 apt-get install -y ./ca-certificates.deb
 
+# Hold the package from further update
+apt-mark hold openssl
 
 # Cleanup
 rm -rf ca-certificates.deb "$opensslfips.tar.gz" "$opensslcore.tar.gz" "$opensslfips" "$opensslcore"
+
+
+
+
+## Install libmysqlclient20
+apt-get remove -y libmysqlclient20
+curl -S https://repo.mysql.com/apt/ubuntu/pool/mysql-5.7/m/mysql-community/libmysqlclient20_5.7.30-1ubuntu18.04_amd64.deb > libmysqlclient20_5.7.30-1ubuntu18.04_amd64.deb
+apt-get install -y ./libmysqlclient20_5.7.30-1ubuntu18.04_amd64.deb
+
+## Install libmysqlclient-dev
+apt-get remove -y libmysqlclient-dev
+curl -S https://repo.mysql.com/apt/ubuntu/pool/mysql-5.7/m/mysql-community/libmysqlclient-dev_5.7.30-1ubuntu18.04_amd64.deb > libmysqlclient-dev_5.7.30-1ubuntu18.04_amd64.deb
+apt-get install -y ./libmysqlclient-dev_5.7.30-1ubuntu18.04_amd64.deb
+
+## Cleanup libmysqlclient20 & libmysqlclient-dev
+rm -rf libmysqlclient20_5.7.30-1ubuntu18.04_amd64.deb libmysqlclient-dev_5.7.30-1ubuntu18.04_amd64.deb

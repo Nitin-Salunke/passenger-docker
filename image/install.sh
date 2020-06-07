@@ -7,8 +7,8 @@ run /pd_build/prepare.sh
 run /pd_build/utilities.sh
 
 # Install FIPS enabled openssl package
-run chmod 777 /pd_build/fips.sh
 run /pd_build/fips.sh
+run /pd_build/test-fips.sh
 
 # Install Ruby 2.7.1
 run /pd_build/ruby-2.7.1.sh
